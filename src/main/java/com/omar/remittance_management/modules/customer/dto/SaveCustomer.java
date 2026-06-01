@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 
-public record  CreateCustomer (
+public record  SaveCustomer (
     @NotBlank(message = "National number is required")
     @Size(max = 255, message = "National number must be at most 255 characters")
     String nationalNumber,

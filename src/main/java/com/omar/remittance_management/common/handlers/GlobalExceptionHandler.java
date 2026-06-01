@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.omar.remittance_management.common.dto.ApiError;
-import com.omar.remittance_management.common.exeption.BusinessException;
+import com.omar.remittance_management.common.exception.BusinessException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

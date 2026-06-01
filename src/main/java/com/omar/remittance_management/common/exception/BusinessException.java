@@ -1,4 +1,4 @@
-package com.omar.remittance_management.common.exeption;
+package com.omar.remittance_management.common.exception;
 
 /**
  * Custom exception for business logic errors in the Remittance Management system.

@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.omar.remittance_management.common.exeption.BusinessException;
-import com.omar.remittance_management.modules.customer.dto.CreateCustomer;
+import com.omar.remittance_management.common.exception.BusinessException;
 import com.omar.remittance_management.modules.customer.dto.CustomerDto;
+import com.omar.remittance_management.modules.customer.dto.SaveCustomer;
 import com.omar.remittance_management.modules.customer.entity.Customer;
 import com.omar.remittance_management.modules.customer.mapper.CustomerMapper;
 import com.omar.remittance_management.modules.customer.repository.CustomerRepo;
@@ -23,31 +23,20 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
 
     // Create
-    public CustomerDto createCustomer(CreateCustomer createCustomerDto) {
+    public CustomerDto SaveCustomer(SaveCustomer SaveCustomerDto) {
         // Check for unique national number
-        if (customerRepo.findByNationalNumber(createCustomerDto.nationalNumber()).isPresent()) {
+        if (customerRepo.existsByNationalNumber(SaveCustomerDto.nationalNumber())) {
             // throw new BusinessException("CUSTOMER_ALREADY_EXISTS", "National number already exists", "Customer already exists");
             throw new BusinessException("CUSTOMER_ALREADY_EXISTS", "National number already exists");
         }
         // Check for unique email if provided
-        if (createCustomerDto.email() != null && !createCustomerDto.email().isBlank()) {
-            if (customerRepo.findByEmail(createCustomerDto.email()).isPresent()) {
-                throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email already exists");
-            }
+        
+        if (customerRepo.existsByEmail(SaveCustomerDto.email())) {
+            throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email already exists");
         }
-        Customer customer = Customer.builder()
-            .nationalNumber(createCustomerDto.nationalNumber())
-            .firstName(createCustomerDto.firstName())
-            .lastName(createCustomerDto.lastName())
-            .email(createCustomerDto.email())
-            .phoneNumber(createCustomerDto.phoneNumber())
-            .birthDate(createCustomerDto.birthDate())
-            .address(createCustomerDto.address())
-            .nationality(createCustomerDto.nationality())
-            .isActive(createCustomerDto.isActive())
-            .build();
-        Customer savedCustomer = customerRepo.save(customer);
+        Customer savedCustomer = customerRepo.save(customerMapper.createDtoToEntity(SaveCustomerDto));
         return customerMapper.toDto(savedCustomer);
+    
     }
 
     // Read All
@@ -62,27 +51,31 @@ public class CustomerService {
         return customerRepo.findById(id).map(customerMapper::toDto);
     }
 
-    // Read by national number
-    public Optional<CustomerDto> getCustomerByNationalNumber(String nationalNumber) {
-        return customerRepo.findByNationalNumber(nationalNumber).map(customerMapper::toDto);
-    }
+    
 
     // Update
-    public Optional<CustomerDto> updateCustomer(Long id, Customer updatedCustomer) {
+    public CustomerDto updateCustomer(Long id, SaveCustomer request) {
         return customerRepo.findById(id).map(existing -> {
-            existing.setNationalNumber(updatedCustomer.getNationalNumber());
-            existing.setFirstName(updatedCustomer.getFirstName());
-            existing.setLastName(updatedCustomer.getLastName());
-            existing.setEmail(updatedCustomer.getEmail());
-            existing.setPhoneNumber(updatedCustomer.getPhoneNumber());
-            existing.setBirthDate(updatedCustomer.getBirthDate());
-            existing.setAddress(updatedCustomer.getAddress());
-            existing.setNationality(updatedCustomer.getNationality());
-            existing.setIsActive(updatedCustomer.getIsActive());
+            // Check for unique national number (exclude current customer)
+            
+            if (customerRepo.existsByNationalNumberAndIdNot(request.nationalNumber(), id)) {
+                throw new BusinessException("CUSTOMER_ALREADY_EXISTS", "National number already exists");
+            }
+           
+            // Check for unique email (exclude current customer)
+            
+            if (customerRepo.existsByEmailAndIdNot(request.email(), id)) {
+                throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email already exists");
+            }
+            customerMapper.updateToEntity(request, existing);
             Customer savedCustomer = customerRepo.save(existing);
             return customerMapper.toDto(savedCustomer);
-        });
+        
+        }).orElseThrow(() -> new BusinessException("CUSTOMER_NOT_FOUND", "Customer not found"));
+   
+   
     }
+
 
     // Delete
     public boolean deleteCustomer(Long id) {

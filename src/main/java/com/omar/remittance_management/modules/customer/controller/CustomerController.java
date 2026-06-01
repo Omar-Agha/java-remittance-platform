@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.omar.remittance_management.modules.customer.dto.CreateCustomer;
 import com.omar.remittance_management.modules.customer.dto.CustomerDto;
-import com.omar.remittance_management.modules.customer.entity.Customer;
+import com.omar.remittance_management.modules.customer.dto.SaveCustomer;
 import com.omar.remittance_management.modules.customer.service.CustomerService;
 
 import jakarta.validation.Valid;
@@ -31,8 +30,8 @@ public class CustomerController {
 
     // Create a new Customer
     @PostMapping
-    public CustomerDto createCustomer(@RequestBody @Valid CreateCustomer customer) {
-        return  customerService.createCustomer(customer);
+    public CustomerDto SaveCustomer(@RequestBody @Valid SaveCustomer customer) {
+        return  customerService.SaveCustomer(customer);
         
     }
 
@@ -54,11 +53,9 @@ public class CustomerController {
 
     // Update a Customer
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
-        Optional<CustomerDto> updatedCustomerDto = customerService.updateCustomer(id, customerDetails);
-        return updatedCustomerDto
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody @Valid SaveCustomer request) {
+        CustomerDto updatedCustomerDto = customerService.updateCustomer(id, request);
+        return ResponseEntity.ok(updatedCustomerDto);
     }
 
     // Delete a Customer
