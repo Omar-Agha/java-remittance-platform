@@ -41,6 +41,14 @@ dependencies {
 
 	implementation 'org.flywaydb:flyway-core'
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+
+
+	// implementation 'org.mapstruct:mapstruct'
+	// annotationProcessor 'org.mapstruct:mapstruct-processor:'
+	implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+	
+ 
 }
 
 

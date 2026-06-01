@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.omar.remittance_management.common.exeption.BusinessException;
 import com.omar.remittance_management.modules.customer.dto.CreateCustomer;
+import com.omar.remittance_management.modules.customer.dto.CustomerDto;
 import com.omar.remittance_management.modules.customer.entity.Customer;
+import com.omar.remittance_management.modules.customer.mapper.CustomerMapper;
 import com.omar.remittance_management.modules.customer.repository.CustomerRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,10 @@ public class CustomerService {
 
     private final CustomerRepo customerRepo;
 
+    private final CustomerMapper customerMapper;
+
     // Create
-    public Customer createCustomer(CreateCustomer createCustomerDto) {
+    public CustomerDto createCustomer(CreateCustomer createCustomerDto) {
         // Check for unique national number
         if (customerRepo.findByNationalNumber(createCustomerDto.nationalNumber()).isPresent()) {
             // throw new BusinessException("CUSTOMER_ALREADY_EXISTS", "National number already exists", "Customer already exists");
@@ -42,26 +46,29 @@ public class CustomerService {
             .nationality(createCustomerDto.nationality())
             .isActive(createCustomerDto.isActive())
             .build();
-        return customerRepo.save(customer);
+        Customer savedCustomer = customerRepo.save(customer);
+        return customerMapper.toDto(savedCustomer);
     }
 
     // Read All
-    public List<Customer> getAllCustomers() {
-        return customerRepo.findAll();
+    public List<CustomerDto> getAllCustomers() {
+        return customerRepo.findAll().stream()
+            .map(customerMapper::toDto)
+            .toList();
     }
 
     // Read by ID
-    public Optional<Customer> getCustomerById(Long id) {
-        return customerRepo.findById(id);
+    public Optional<CustomerDto> getCustomerById(Long id) {
+        return customerRepo.findById(id).map(customerMapper::toDto);
     }
 
     // Read by national number
-    public Optional<Customer> getCustomerByNationalNumber(String nationalNumber) {
-        return customerRepo.findByNationalNumber(nationalNumber);
+    public Optional<CustomerDto> getCustomerByNationalNumber(String nationalNumber) {
+        return customerRepo.findByNationalNumber(nationalNumber).map(customerMapper::toDto);
     }
 
     // Update
-    public Optional<Customer> updateCustomer(Long id, Customer updatedCustomer) {
+    public Optional<CustomerDto> updateCustomer(Long id, Customer updatedCustomer) {
         return customerRepo.findById(id).map(existing -> {
             existing.setNationalNumber(updatedCustomer.getNationalNumber());
             existing.setFirstName(updatedCustomer.getFirstName());
@@ -72,7 +79,8 @@ public class CustomerService {
             existing.setAddress(updatedCustomer.getAddress());
             existing.setNationality(updatedCustomer.getNationality());
             existing.setIsActive(updatedCustomer.getIsActive());
-            return customerRepo.save(existing);
+            Customer savedCustomer = customerRepo.save(existing);
+            return customerMapper.toDto(savedCustomer);
         });
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.omar.remittance_management.modules.customer.dto.CreateCustomer;
+import com.omar.remittance_management.modules.customer.dto.CustomerDto;
 import com.omar.remittance_management.modules.customer.entity.Customer;
 import com.omar.remittance_management.modules.customer.service.CustomerService;
 
@@ -26,32 +27,36 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    
 
     // Create a new Customer
     @PostMapping
-    public Customer createCustomer(@RequestBody @Valid CreateCustomer customer) {
-        return customerService.createCustomer(customer);
+    public CustomerDto createCustomer(@RequestBody @Valid CreateCustomer customer) {
+        return  customerService.createCustomer(customer);
+        
     }
 
     // Get all Customers
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDto> getAllCustomers() {
         return customerService.getAllCustomers();
+                
     }
 
     // Get a Customer by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-        Optional<Customer> customer = customerService.getCustomerById(id);
-        return customer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
+        Optional<CustomerDto> customerDto = customerService.getCustomerById(id);
+        return customerDto
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Update a Customer
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
-        Optional<Customer> updatedCustomer = customerService.updateCustomer(id, customerDetails);
-
-        return updatedCustomer
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
+        Optional<CustomerDto> updatedCustomerDto = customerService.updateCustomer(id, customerDetails);
+        return updatedCustomerDto
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

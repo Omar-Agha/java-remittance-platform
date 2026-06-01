@@ -20,4 +20,5 @@ public class CustomerDto {
     private String address;
     private String nationality;
     private Boolean isActive;
+    
 }
