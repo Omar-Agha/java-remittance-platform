@@ -1,18 +1,22 @@
 package com.omar.remittance_management.modules.customer.entity;
 
+import java.util.List;
+
+import com.omar.remittance_management.modules.customer.entity.address.Address;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-
-
-import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "customers")
@@ -42,9 +46,12 @@ public class Customer {
     private String nationality;
     private Boolean isActive;
 
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
+
     public String getFullName() {
         return (firstName != null ? firstName : "") +
-               (firstName != null && lastName != null ? " " : "") +
-               (lastName != null ? lastName : "");
+                (firstName != null && lastName != null ? " " : "") +
+                (lastName != null ? lastName : "");
     }
 }
