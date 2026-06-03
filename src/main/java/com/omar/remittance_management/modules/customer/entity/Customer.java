@@ -2,8 +2,6 @@ package com.omar.remittance_management.modules.customer.entity;
 
 import java.util.List;
 
-import com.omar.remittance_management.modules.customer.entity.address.Address;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

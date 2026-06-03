@@ -1,11 +1,11 @@
-package com.omar.remittance_management.modules.customer.repository.address;
+package com.omar.remittance_management.modules.customer.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.omar.remittance_management.modules.customer.entity.address.Address;
+import com.omar.remittance_management.modules.customer.entity.Address;
 
 @Repository
 public interface AddressRepo extends JpaRepository<Address, Long> {
