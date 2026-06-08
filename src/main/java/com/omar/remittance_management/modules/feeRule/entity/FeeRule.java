@@ -56,25 +56,24 @@ public class FeeRule {
     @Column(nullable = true)
     private String approvedByUserName;
 
-    public void approve(Long userId, String userName) {
-        validateEffectiveDate(this.effectiveDate);
+    public void approve(Long userId, String userName, Instant now) {
+        validateEffectiveDate(this.effectiveDate, now);
         this.isApproved = true;
         this.approvedByUserId = userId;
         this.approvedByUserName = userName;
     }
 
-    private void validateEffectiveDate(Instant effectiveDate) {
-        if (effectiveDate == null || effectiveDate.isBefore(Instant.now())) {
+    private void validateEffectiveDate(Instant effectiveDate, Instant now) {
+        if (effectiveDate == null || effectiveDate.isBefore(now)) {
 
             throw new BusinessException(ExceptionCodes.EFFECTIVE_DATE_IN_PAST);
         }
     }
 
-    public FeeRule(String ruleName, FeeRuleType feeRuleType, Instant effectiveDate) {
-        validateEffectiveDate(effectiveDate);
+    public FeeRule(String ruleName, FeeRuleType feeRuleType) {
+
         this.ruleName = ruleName;
         this.feeRuleType = feeRuleType;
-        this.effectiveDate = effectiveDate;
     }
 
     public void addLines(List<FeeRuleLine> newLines) {
@@ -94,8 +93,8 @@ public class FeeRule {
         }
     }
 
-    public void setEffectiveDate(Instant effectiveDate) {
-        validateEffectiveDate(effectiveDate);
+    public void setEffectiveDate(Instant effectiveDate, Instant now) {
+        validateEffectiveDate(effectiveDate, now);
         this.effectiveDate = effectiveDate;
     }
 

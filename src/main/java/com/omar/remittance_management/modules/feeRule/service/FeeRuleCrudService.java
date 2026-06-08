@@ -42,8 +42,8 @@ public class FeeRuleCrudService {
         }
         FeeRule feeRule = new FeeRule(
                 saveFeeRuleDto.ruleName(),
-                saveFeeRuleDto.feeRuleType(),
-                saveFeeRuleDto.effectiveDate());
+                saveFeeRuleDto.feeRuleType());
+        feeRule.setEffectiveDate(saveFeeRuleDto.effectiveDate(), Instant.now());
 
         List<FeeRuleLine> lines = (saveFeeRuleDto.lines() != null && !saveFeeRuleDto.lines().isEmpty())
                 ? saveFeeRuleDto.lines().stream()
@@ -90,7 +90,7 @@ public class FeeRuleCrudService {
         }
 
         if (saveFeeRuleDto.effectiveDate() != null) {
-            feeRule.setEffectiveDate(saveFeeRuleDto.effectiveDate());
+            feeRule.setEffectiveDate(saveFeeRuleDto.effectiveDate(), Instant.now());
         }
 
         if (saveFeeRuleDto.feeRuleType() != null) {
@@ -123,7 +123,7 @@ public class FeeRuleCrudService {
         FeeRule feeRule = feeRuleRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("FeeRule", id));
 
-        feeRule.approve(1L, "dummy user");
+        feeRule.approve(1L, "dummy user", Instant.now());
         FeeRule saved = feeRuleRepo.save(feeRule);
         return feeRuleMapper.toDto(saved);
     }
