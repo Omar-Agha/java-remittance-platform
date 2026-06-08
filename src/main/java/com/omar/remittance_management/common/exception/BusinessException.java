@@ -1,7 +1,8 @@
 package com.omar.remittance_management.common.exception;
 
 /**
- * Custom exception for business logic errors in the Remittance Management system.
+ * Custom exception for business logic errors in the Remittance Management
+ * system.
  * Typically thrown when a rule or invariant in the business domain is violated.
  */
 public class BusinessException extends RuntimeException {
@@ -10,6 +11,11 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(String code, String message) {
         super(message);
+        this.code = code;
+    }
+
+    public BusinessException(String code) {
+        super(code);
         this.code = code;
     }
 
