@@ -1,4 +1,4 @@
-package com.omar.remittance_management.modules.feeRule;
+package com.omar.remittance_management.modules.feeRule.repo;
 
 import java.time.Instant;
 import java.util.Optional;

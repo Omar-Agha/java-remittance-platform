@@ -84,6 +84,9 @@ public class FeeRuleCrudService {
                 throw new BusinessException("Rule name must be unique");
             }
         }
+        if (feeRule.isApproved()) {
+            throw new BusinessException("Cannot update an approved FeeRule.");
+        }
 
         if (saveFeeRuleDto.ruleName() != null && !saveFeeRuleDto.ruleName().isBlank()) {
             feeRule.setRuleName(saveFeeRuleDto.ruleName());
