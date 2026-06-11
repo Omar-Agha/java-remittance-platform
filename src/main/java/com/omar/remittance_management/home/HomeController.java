@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/hi")
     public String home() {
         return "Welcome to the Remittance Management System!";
     }

@@ -22,7 +22,7 @@ public class FeeRuleRepoTest {
         @Autowired
         private FeeRuleRepo feeRuleRepo;
 
-        private static final Instant NOW = Instant.parse("2026-01-01T00:00:00Z");
+        private static final Instant NOW = Instant.now().plusSeconds(365 * 24 * 60 * 60);
 
         private FeeRule createAndSaveFeeRule(String ruleName, FeeRuleType type,
                         Instant effectiveDate, boolean isApproved) {
