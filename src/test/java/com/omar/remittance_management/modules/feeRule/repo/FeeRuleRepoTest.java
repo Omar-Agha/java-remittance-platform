@@ -1,5 +1,6 @@
 package com.omar.remittance_management.modules.feeRule.repo;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class FeeRuleRepoTest {
         private FeeRule createAndSaveFeeRule(String ruleName, FeeRuleType type,
                         Instant effectiveDate, boolean isApproved) {
                 var previousNow = effectiveDate.minusSeconds(2 * 24 * 60 * 60);
-                FeeRule feeRule = new FeeRule(ruleName, type);
+                FeeRule feeRule = new FeeRule(ruleName, type, BigDecimal.valueOf(0.2));
                 feeRule.setEffectiveDate(effectiveDate, previousNow);
 
                 // Set approval fields directly to simulate various cases

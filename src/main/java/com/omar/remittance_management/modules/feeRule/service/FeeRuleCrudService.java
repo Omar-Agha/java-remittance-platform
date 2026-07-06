@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +19,15 @@ import com.omar.remittance_management.modules.feeRule.exception.ExceptionCodes;
 import com.omar.remittance_management.modules.feeRule.mapper.FeeRuleMapper;
 import com.omar.remittance_management.modules.feeRule.repository.FeeRuleRepo;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class FeeRuleCrudService {
 
-    @Autowired
-    private FeeRuleRepo feeRuleRepo;
-    @Autowired
-    private FeeRuleMapper feeRuleMapper;
+    private final FeeRuleRepo feeRuleRepo;
+
+    private final FeeRuleMapper feeRuleMapper;
 
     @Transactional
     public FeeRuleDto createFeeRule(SaveFeeRuleDto saveFeeRuleDto) {
@@ -42,7 +43,8 @@ public class FeeRuleCrudService {
         }
         FeeRule feeRule = new FeeRule(
                 saveFeeRuleDto.ruleName(),
-                saveFeeRuleDto.feeRuleType());
+                saveFeeRuleDto.feeRuleType(),
+                saveFeeRuleDto.constantRate());
         feeRule.setEffectiveDate(saveFeeRuleDto.effectiveDate(), Instant.now());
 
         List<FeeRuleLine> lines = (saveFeeRuleDto.lines() != null && !saveFeeRuleDto.lines().isEmpty())
@@ -99,6 +101,8 @@ public class FeeRuleCrudService {
         if (saveFeeRuleDto.feeRuleType() != null) {
             feeRule.setFeeRuleType(saveFeeRuleDto.feeRuleType());
         }
+
+        feeRule.setConstantRate(saveFeeRuleDto.constantRate());
 
         FeeRule updated = feeRuleRepo.save(feeRule);
         if (saveFeeRuleDto.lines() != null) {
