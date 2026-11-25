@@ -48,7 +48,7 @@ public class TaxController {
      * Get a tax by id.
      */
     @GetMapping("/{id}")
-    public TaxDto getTaxById(@PathVariable Long id) {
+    public TaxDto getTaxById(@PathVariable("id") Long id) {
         return taxService.findById(id);
     }
 
